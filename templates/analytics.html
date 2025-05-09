@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Unemployment and Salary College Graduate USA{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Analytics Dashboard</h1>
+        <p class="text-gray-600 mb-6">
+            Visualize trends and patterns in unemployment and salary data for college graduates in the USA.
+        </p>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Unemployment Rate Over Time</h2>
+                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
+                    <p class="text-gray-500">Chart will be displayed here</p>
+                    <!-- Chart will be rendered here by JavaScript -->
+                </div>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p>This chart shows the unemployment rate for college graduates over time, compared to the overall unemployment rate.</p>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Average Salary by Degree</h2>
+                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
+                    <p class="text-gray-500">Chart will be displayed here</p>
+                    <!-- Chart will be rendered here by JavaScript -->
+                </div>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p>This chart compares average salaries for different degree levels (Bachelor's, Master's, Doctoral).</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Salary vs. Unemployment Rate</h2>
+                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
+                    <p class="text-gray-500">Chart will be displayed here</p>
+                    <!-- Chart will be rendered here by JavaScript -->
+                </div>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p>This scatter plot shows the relationship between salary and unemployment rate for different fields of study.</p>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Salary Growth by Field</h2>
+                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
+                    <p class="text-gray-500">Chart will be displayed here</p>
+                    <!-- Chart will be rendered here by JavaScript -->
+                </div>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p>This chart shows salary growth over time for different fields of study.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Key Insights</h2>
+            <ul class="list-disc list-inside text-gray-600 space-y-2">
+                <li>College graduates consistently experience lower unemployment rates compared to those without degrees.</li>
+                <li>STEM fields generally show higher starting salaries and better long-term growth.</li>
+                <li>Advanced degrees (Master's, PhD) show significant salary premiums in most fields.</li>
+                <li>Economic recessions impact college graduates less severely than non-graduates.</li>
+                <li>Gender and racial gaps persist in both employment rates and salaries across most fields.</li>
+            </ul>
+        </div>
+        
+        <div class="text-center">
+            <a href="/models" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition duration-300">
+                Explore Predictive Models
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Placeholder for chart initialization code
+    // In a real application, you would include a charting library like Chart.js
+    // and initialize the charts here with data from your API
+</script>
+{% endblock %} 

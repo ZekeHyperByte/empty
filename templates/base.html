@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gold and Bitcoin Predictor{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow">
+        <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <a href="/" class="text-xl font-bold text-blue-600">
+                    <span class="text-yellow-500">Gold</span> & <span class="text-blue-500">Bitcoin</span> Predictor
+                </a>
+            </div>
+            <div class="flex space-x-4">
+                <a href="/" class="text-gray-700 hover:text-blue-600">Home</a>
+                <a href="/data" class="text-gray-700 hover:text-blue-600">Data</a>
+                <a href="/analytics" class="text-gray-700 hover:text-blue-600">Analytics</a>
+                <a href="/models" class="text-gray-700 hover:text-blue-600">Predictions</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white shadow mt-8 py-4">
+        <div class="container mx-auto px-4 text-center text-gray-700">
+            <p>&copy; 2024 Gold and Bitcoin Predictor. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.8.1/dist/flowbite.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

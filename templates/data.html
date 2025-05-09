@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Data - Unemployment and Salary College Graduate USA{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <div class="p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Data Exploration</h1>
+        <p class="text-gray-600 mb-6">
+            Explore the dataset used in this analysis. This section provides summary statistics and an overview
+            of the data structure.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Dataset Information</h2>
+                
+                <div class="mb-4">
+                    <h3 class="font-medium text-gray-700 mb-2">Dataset Shape:</h3>
+                    <p class="text-gray-600">
+                        {% if stats and stats.shape %}
+                            {{ stats.shape[0] }} rows × {{ stats.shape[1] }} columns
+                        {% else %}
+                            Data not available
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-2">Columns:</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                        {% if stats and stats.columns %}
+                            {% for column in stats.columns %}
+                                <li>{{ column }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>Data not available</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Missing Values</h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="text-left py-2 px-4 font-medium text-gray-700">Column</th>
+                                <th class="text-left py-2 px-4 font-medium text-gray-700">Missing Values</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if stats and stats.missing_values %}
+                                {% for column, count in stats.missing_values.items() %}
+                                    <tr class="border-b border-gray-200">
+                                        <td class="py-2 px-4 text-gray-700">{{ column }}</td>
+                                        <td class="py-2 px-4 text-gray-700">{{ count }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="2" class="py-2 px-4 text-gray-700">Data not available</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gray-50 p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Summary Statistics</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="text-left py-2 px-4 font-medium text-gray-700">Statistic</th>
+                            {% if stats and stats.columns %}
+                                {% for column in stats.columns %}
+                                    <th class="text-left py-2 px-4 font-medium text-gray-700">{{ column }}</th>
+                                {% endfor %}
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if stats and stats.summary %}
+                            {% for stat in ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'] %}
+                                <tr class="border-b border-gray-200">
+                                    <td class="py-2 px-4 font-medium text-gray-700">{{ stat }}</td>
+                                    {% for column in stats.columns %}
+                                        {% if column in stats.summary and stat in stats.summary[column] %}
+                                            <td class="py-2 px-4 text-gray-700">
+                                                {{ stats.summary[column][stat]|round(2) if stats.summary[column][stat] is number else stats.summary[column][stat] }}
+                                            </td>
+                                        {% else %}
+                                            <td class="py-2 px-4 text-gray-700">-</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="{{ (stats.columns|length + 1) if stats and stats.columns else 2 }}" class="py-2 px-4 text-gray-700">
+                                    Summary statistics not available
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <a href="/analytics" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition duration-300">
+                Continue to Analytics
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 
