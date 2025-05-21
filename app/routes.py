@@ -8,6 +8,15 @@ from app.models import DataModel
 # Initialize the data model with the path to the data file
 data_model = DataModel(os.path.join('data', 'SP500 oil gold bitcoin.csv'))
 
+def to_python_type(obj):
+    if isinstance(obj, np.generic):
+        return obj.item()
+    if isinstance(obj, dict):
+        return {k: to_python_type(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [to_python_type(v) for v in obj]
+    return obj
+
 def init_routes(app):
     """Initialize all application routes"""
     
@@ -58,25 +67,24 @@ def init_routes(app):
     @app.route('/models')
     def models():
         """Route for the models page"""
-        # Load data if not already loaded
         if data_model.data is None:
             data_model.load_data()
-            
-        # Get available target columns for prediction
-        available_targets = []
-        if 'Gold' in data_model.data.columns:
-            available_targets.append('Gold')
-        if 'Bitcoin' in data_model.data.columns:
-            available_targets.append('Bitcoin')
-            
-        # Get available feature columns
-        available_features = [col for col in data_model.data.columns 
-                             if col not in ['Date', 'Gold', 'Bitcoin'] 
-                             and not pd.isna(data_model.data[col]).all()]
-            
-        return render_template('models.html', 
-                              available_targets=available_targets,
-                              available_features=available_features)
+        data_model.add_all_features()
+        gold_metrics = None
+        bitcoin_metrics = None
+        try:
+            data_model.load_model('train/output/gold_xgb_model.pkl')
+            gold_metrics = data_model.evaluate_models().get('xgboost')
+            gold_metrics = to_python_type(gold_metrics)
+        except Exception as e:
+            gold_metrics = None
+        try:
+            data_model.load_model('train/output/bitcoin_xgb_model.pkl')
+            bitcoin_metrics = data_model.evaluate_models().get('xgboost')
+            bitcoin_metrics = to_python_type(bitcoin_metrics)
+        except Exception as e:
+            bitcoin_metrics = None
+        return render_template('models.html', gold_metrics=gold_metrics, bitcoin_metrics=bitcoin_metrics)
     
     @app.route('/api/data/summary')
     def api_data_summary():
@@ -183,4 +191,66 @@ def init_routes(app):
         return jsonify({
             'success': True,
             'correlation': corr_matrix
-        }) 
+        })
+
+    @app.route('/api/model/trading-recommendation', methods=['POST'])
+    def api_trading_recommendation():
+        """API endpoint to get trading recommendations"""
+        try:
+            params = request.json
+            asset = params.get('asset')
+            timeframe = params.get('timeframe', '1d')
+            if not asset or asset.lower() not in ['gold', 'bitcoin']:
+                return jsonify({'error': 'Invalid asset. Must be "gold" or "bitcoin"'}), 400
+            if timeframe not in ['1d', '1w', '1m']:
+                return jsonify({'error': 'Invalid timeframe. Must be "1d", "1w", or "1m"'}), 400
+            if data_model.data is None:
+                if not data_model.load_data():
+                    return jsonify({'error': 'Failed to load data file. Please check if the data file exists and is properly formatted.'}), 500
+            data_model.add_all_features()
+            try:
+                data_model.load_model(f'train/output/{asset.lower()}_xgb_model.pkl')
+            except Exception as e:
+                return jsonify({'error': f'Model not available: {str(e)}'}), 400
+            try:
+                recommendation = data_model.get_trading_recommendation(asset, timeframe)
+                recommendation = to_python_type(recommendation)
+            except Exception as e:
+                return jsonify({'error': f'Error generating recommendation: {str(e)}'}), 500
+            return jsonify({
+                'success': True,
+                'recommendation': recommendation
+            })
+        except Exception as e:
+            return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+
+    @app.route('/api/model/performance')
+    def api_model_performance():
+        try:
+            if data_model.data is None:
+                data_model.load_data()
+            data_model.add_all_features()
+            gold_performance = None
+            bitcoin_performance = None
+            try:
+                data_model.load_model('train/output/gold_xgb_model.pkl')
+                gold_performance = data_model.evaluate_models().get('xgboost')
+                gold_performance = to_python_type(gold_performance)
+            except Exception as e:
+                gold_performance = None
+            try:
+                data_model.load_model('train/output/bitcoin_xgb_model.pkl')
+                bitcoin_performance = data_model.evaluate_models().get('xgboost')
+                bitcoin_performance = to_python_type(bitcoin_performance)
+            except Exception as e:
+                bitcoin_performance = None
+            return jsonify({
+                'success': True,
+                'gold': gold_performance,
+                'bitcoin': bitcoin_performance
+            })
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'error': str(e)
+            }), 500 

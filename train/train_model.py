@@ -83,6 +83,8 @@ def plot_correlation_matrix(data, output_path):
                 square=True, linewidths=0.5, cbar_kws={"shrink": 0.8})
     plt.title('Correlation Matrix')
     plt.tight_layout()
+    # Ensure output directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path)
     plt.close()
 
@@ -172,6 +174,9 @@ def train_and_evaluate(data_model, target_col, feature_cols, output_dir='train/o
         print(f"Day {i}: {pred:.2f}")
     print("...")
     
+    # Save the trained XGBoost model
+    data_model.save_model(os.path.join(output_dir, f'{target_col}_xgb_model.pkl'))
+    
     return metrics
 
 def main():
@@ -199,21 +204,17 @@ def main():
     
     # Define targets and features for Gold prediction
     if 'Gold' in model.data.columns:
-        gold_features = ['SP500', 'Oil', 'Bitcoin']
-        # Add any additional features that exist in the dataset
+        gold_features = ['S&P500', 'Brent Oil', 'Crude Oil WTI', 'BITCOIN']
         gold_features = [f for f in gold_features if f in model.data.columns]
-        
-        # Train and evaluate Gold prediction models
         gold_metrics = train_and_evaluate(model, 'Gold', gold_features)
-    
+        model.save_model(os.path.join('train/output', 'gold_xgb_model.pkl'))
+
     # Define targets and features for Bitcoin prediction
-    if 'Bitcoin' in model.data.columns:
-        bitcoin_features = ['SP500', 'Oil', 'Gold']
-        # Add any additional features that exist in the dataset
+    if 'BITCOIN' in model.data.columns:
+        bitcoin_features = ['S&P500', 'Brent Oil', 'Crude Oil WTI', 'Gold']
         bitcoin_features = [f for f in bitcoin_features if f in model.data.columns]
-        
-        # Train and evaluate Bitcoin prediction models
-        bitcoin_metrics = train_and_evaluate(model, 'Bitcoin', bitcoin_features)
+        bitcoin_metrics = train_and_evaluate(model, 'BITCOIN', bitcoin_features)
+        model.save_model(os.path.join('train/output', 'bitcoin_xgb_model.pkl'))
     
     print("\nTraining completed!")
 

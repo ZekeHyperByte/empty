@@ -45,3 +45,11 @@ yarn-error.log
 .vscode/
 *.swp
 *.swo 
+*.pkl
+*.joblib
+*.pickle
+*.joblib.z
+*.pickle.z
+*.joblib.gz
+*.pickle.gz
+output/*.pkl

@@ -1,59 +1,47 @@
 {% extends "base.html" %}
 
-{% block title %}Analytics - Unemployment and Salary College Graduate USA{% endblock %}
+{% block title %}Analytics - Gold and Bitcoin Predictor{% endblock %}
 
 {% block content %}
 <div class="bg-white shadow-md rounded-lg overflow-hidden">
     <div class="p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-4">Analytics Dashboard</h1>
         <p class="text-gray-600 mb-6">
-            Visualize trends and patterns in unemployment and salary data for college graduates in the USA.
+            Visualize trends and patterns in Gold and Bitcoin prices, along with their market correlations.
         </p>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Unemployment Rate Over Time</h2>
-                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
-                    <p class="text-gray-500">Chart will be displayed here</p>
-                    <!-- Chart will be rendered here by JavaScript -->
-                </div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Gold Price Trends</h2>
+                <canvas id="goldChart" class="w-full h-64"></canvas>
                 <div class="mt-4 text-sm text-gray-600">
-                    <p>This chart shows the unemployment rate for college graduates over time, compared to the overall unemployment rate.</p>
+                    <p>This chart shows the historical Gold price trends and predicted future movements.</p>
                 </div>
             </div>
             
             <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Average Salary by Degree</h2>
-                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
-                    <p class="text-gray-500">Chart will be displayed here</p>
-                    <!-- Chart will be rendered here by JavaScript -->
-                </div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Bitcoin Price Trends</h2>
+                <canvas id="bitcoinChart" class="w-full h-64"></canvas>
                 <div class="mt-4 text-sm text-gray-600">
-                    <p>This chart compares average salaries for different degree levels (Bachelor's, Master's, Doctoral).</p>
+                    <p>This chart displays Bitcoin's price history and future price predictions.</p>
                 </div>
             </div>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Salary vs. Unemployment Rate</h2>
-                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
-                    <p class="text-gray-500">Chart will be displayed here</p>
-                    <!-- Chart will be rendered here by JavaScript -->
-                </div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Market Correlation</h2>
+                <canvas id="correlationChart" class="w-full h-64"></canvas>
                 <div class="mt-4 text-sm text-gray-600">
-                    <p>This scatter plot shows the relationship between salary and unemployment rate for different fields of study.</p>
+                    <p>This scatter plot shows the relationship between Gold and Bitcoin prices over time.</p>
                 </div>
             </div>
             
             <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Salary Growth by Field</h2>
-                <div class="aspect-w-16 aspect-h-9 bg-gray-200 rounded flex items-center justify-center">
-                    <p class="text-gray-500">Chart will be displayed here</p>
-                    <!-- Chart will be rendered here by JavaScript -->
-                </div>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Price Volatility Analysis</h2>
+                <canvas id="volatilityChart" class="w-full h-64"></canvas>
                 <div class="mt-4 text-sm text-gray-600">
-                    <p>This chart shows salary growth over time for different fields of study.</p>
+                    <p>This chart shows the volatility patterns of both Gold and Bitcoin prices.</p>
                 </div>
             </div>
         </div>
@@ -61,17 +49,17 @@
         <div class="bg-gray-50 p-6 rounded-lg shadow mb-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Key Insights</h2>
             <ul class="list-disc list-inside text-gray-600 space-y-2">
-                <li>College graduates consistently experience lower unemployment rates compared to those without degrees.</li>
-                <li>STEM fields generally show higher starting salaries and better long-term growth.</li>
-                <li>Advanced degrees (Master's, PhD) show significant salary premiums in most fields.</li>
-                <li>Economic recessions impact college graduates less severely than non-graduates.</li>
-                <li>Gender and racial gaps persist in both employment rates and salaries across most fields.</li>
+                <li>Gold prices typically show more stability compared to Bitcoin's volatility.</li>
+                <li>Bitcoin often shows higher correlation with market sentiment and tech stocks.</li>
+                <li>Gold maintains its value better during market downturns.</li>
+                <li>Both assets show seasonal patterns in their price movements.</li>
+                <li>Market events and global economic conditions significantly impact both assets.</li>
             </ul>
         </div>
         
         <div class="text-center">
             <a href="/models" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition duration-300">
-                Explore Predictive Models
+                Try Our Prediction Models
             </a>
         </div>
     </div>
@@ -79,9 +67,97 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Placeholder for chart initialization code
-    // In a real application, you would include a charting library like Chart.js
-    // and initialize the charts here with data from your API
+async function fetchChartData() {
+    const response = await fetch('/api/data/summary');
+    return await response.json();
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    const data = await fetchChartData();
+    const dates = data.summary && data.summary.Date ? Object.values(data.summary.Date) : [];
+    const gold = data.summary && data.summary.Gold ? Object.values(data.summary.Gold) : [];
+    const bitcoin = data.summary && data.summary.BITCOIN ? Object.values(data.summary.BITCOIN) : [];
+
+    // Gold Chart
+    new Chart(document.getElementById('goldChart'), {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Gold',
+                data: gold,
+                borderColor: '#f59e42',
+                backgroundColor: 'rgba(245, 158, 66, 0.2)',
+                fill: true,
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    // Bitcoin Chart
+    new Chart(document.getElementById('bitcoinChart'), {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Bitcoin',
+                data: bitcoin,
+                borderColor: '#4f8ef7',
+                backgroundColor: 'rgba(79, 142, 247, 0.2)',
+                fill: true,
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    // Correlation Chart (scatter)
+    new Chart(document.getElementById('correlationChart'), {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Gold vs Bitcoin',
+                data: gold.map((g, i) => ({ x: g, y: bitcoin[i] })),
+                backgroundColor: '#a78bfa',
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+
+    // Volatility Chart (rolling std)
+    const goldVol = gold.map((v, i, arr) => i >= 6 ? std(arr.slice(i-6, i+1)) : null);
+    const bitcoinVol = bitcoin.map((v, i, arr) => i >= 6 ? std(arr.slice(i-6, i+1)) : null);
+    new Chart(document.getElementById('volatilityChart'), {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [
+                {
+                    label: 'Gold Volatility',
+                    data: goldVol,
+                    borderColor: '#f59e42',
+                    backgroundColor: 'rgba(245, 158, 66, 0.1)',
+                    fill: true,
+                },
+                {
+                    label: 'Bitcoin Volatility',
+                    data: bitcoinVol,
+                    borderColor: '#4f8ef7',
+                    backgroundColor: 'rgba(79, 142, 247, 0.1)',
+                    fill: true,
+                }
+            ]
+        },
+        options: { responsive: true, plugins: { legend: { display: true } } }
+    });
+
+    function std(arr) {
+        const valid = arr.filter(x => x !== null && !isNaN(x));
+        if (valid.length === 0) return null;
+        const mean = valid.reduce((a, b) => a + b, 0) / valid.length;
+        return Math.sqrt(valid.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / valid.length);
+    }
+});
 </script>
 {% endblock %} 

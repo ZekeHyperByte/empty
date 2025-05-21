@@ -1,171 +1,117 @@
 {% extends "base.html" %}
 
-{% block title %}Models - Unemployment and Salary College Graduate USA{% endblock %}
+{% block title %}Models - Gold and Bitcoin Predictor{% endblock %}
 
 {% block content %}
 <div class="bg-white shadow-md rounded-lg overflow-hidden">
     <div class="p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">Predictive Models</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Prediction Models</h1>
         <p class="text-gray-600 mb-6">
-            Explore machine learning models that predict future unemployment and salary trends for college graduates.
+            Get predictions for Gold and Bitcoin prices and trading recommendations using our advanced machine learning models.
         </p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Linear Regression Model</h2>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Gold Prediction Model</h2>
                 <div class="mb-4">
                     <h3 class="font-medium text-gray-700 mb-2">Model Performance:</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="bg-blue-50 p-3 rounded">
+                        <div class="bg-yellow-50 p-3 rounded">
                             <p class="text-sm text-gray-500">MSE</p>
-                            <p class="text-lg font-bold text-blue-600">0.127</p>
+                            <p class="text-lg font-bold text-yellow-600" id="gold-mse">--</p>
                         </div>
-                        <div class="bg-blue-50 p-3 rounded">
+                        <div class="bg-yellow-50 p-3 rounded">
                             <p class="text-sm text-gray-500">RMSE</p>
-                            <p class="text-lg font-bold text-blue-600">0.356</p>
+                            <p class="text-lg font-bold text-yellow-600" id="gold-rmse">--</p>
                         </div>
-                        <div class="bg-blue-50 p-3 rounded">
+                        <div class="bg-yellow-50 p-3 rounded">
                             <p class="text-sm text-gray-500">R²</p>
-                            <p class="text-lg font-bold text-blue-600">0.842</p>
+                            <p class="text-lg font-bold text-yellow-600" id="gold-r2">--</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="mb-4">
                     <h3 class="font-medium text-gray-700 mb-2">Feature Importance:</h3>
-                    <div class="space-y-2">
-                        <div class="flex items-center">
-                            <span class="w-24 text-sm text-gray-600">Feature 1</span>
-                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">0.75</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="w-24 text-sm text-gray-600">Feature 2</span>
-                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: 60%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">0.60</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="w-24 text-sm text-gray-600">Feature 3</span>
-                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full" style="width: 45%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">0.45</span>
-                        </div>
+                    <div class="space-y-2" id="gold-features">
+                        <!-- Will be populated by JavaScript -->
                     </div>
-                </div>
-                
-                <div>
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300">
-                        View Model Details
-                    </button>
                 </div>
             </div>
             
             <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Random Forest Model</h2>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Bitcoin Prediction Model</h2>
                 <div class="mb-4">
                     <h3 class="font-medium text-gray-700 mb-2">Model Performance:</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="bg-green-50 p-3 rounded">
+                        <div class="bg-blue-50 p-3 rounded">
                             <p class="text-sm text-gray-500">MSE</p>
-                            <p class="text-lg font-bold text-green-600">0.098</p>
+                            <p class="text-lg font-bold text-blue-600" id="bitcoin-mse">{{ bitcoin_metrics['mse'] if bitcoin_metrics else 'Feature(s) missing' }}</p>
                         </div>
-                        <div class="bg-green-50 p-3 rounded">
+                        <div class="bg-blue-50 p-3 rounded">
                             <p class="text-sm text-gray-500">RMSE</p>
-                            <p class="text-lg font-bold text-green-600">0.313</p>
+                            <p class="text-lg font-bold text-blue-600" id="bitcoin-rmse">{{ bitcoin_metrics['rmse'] if bitcoin_metrics else 'Feature(s) missing' }}</p>
                         </div>
-                        <div class="bg-green-50 p-3 rounded">
+                        <div class="bg-blue-50 p-3 rounded">
                             <p class="text-sm text-gray-500">R²</p>
-                            <p class="text-lg font-bold text-green-600">0.877</p>
+                            <p class="text-lg font-bold text-blue-600" id="bitcoin-r2">{{ bitcoin_metrics['r2'] if bitcoin_metrics else 'Feature(s) missing' }}</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="mb-4">
                     <h3 class="font-medium text-gray-700 mb-2">Feature Importance:</h3>
-                    <div class="space-y-2">
-                        <div class="flex items-center">
-                            <span class="w-24 text-sm text-gray-600">Feature 1</span>
-                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-600 h-2 rounded-full" style="width: 80%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">0.80</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="w-24 text-sm text-gray-600">Feature 2</span>
-                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-600 h-2 rounded-full" style="width: 65%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">0.65</span>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="w-24 text-sm text-gray-600">Feature 3</span>
-                            <div class="flex-1 bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-600 h-2 rounded-full" style="width: 50%"></div>
-                            </div>
-                            <span class="ml-2 text-sm text-gray-600">0.50</span>
-                        </div>
+                    <div class="space-y-2" id="bitcoin-features">
+                        <!-- Will be populated by JavaScript -->
                     </div>
-                </div>
-                
-                <div>
-                    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-300">
-                        View Model Details
-                    </button>
                 </div>
             </div>
         </div>
         
         <div class="bg-gray-50 p-6 rounded-lg shadow mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Train a Custom Model</h2>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Get Trading Recommendations</h2>
             
             <form class="space-y-4">
                 <div>
-                    <label for="target" class="block text-sm font-medium text-gray-700 mb-1">Target Variable:</label>
-                    <select id="target" name="target" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        <option value="">Select target variable</option>
-                        <option value="salary">Salary</option>
-                        <option value="unemployment">Unemployment Rate</option>
+                    <label for="asset" class="block text-sm font-medium text-gray-700 mb-1">Select Asset:</label>
+                    <select id="asset" name="asset" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <option value="">Select an asset</option>
+                        <option value="gold">Gold</option>
+                        <option value="bitcoin">Bitcoin</option>
                     </select>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Select Features:</label>
-                    <div class="space-y-2">
-                        <div class="flex items-center">
-                            <input id="feature1" name="features" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                            <label for="feature1" class="ml-2 block text-sm text-gray-700">Feature 1</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input id="feature2" name="features" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                            <label for="feature2" class="ml-2 block text-sm text-gray-700">Feature 2</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input id="feature3" name="features" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                            <label for="feature3" class="ml-2 block text-sm text-gray-700">Feature 3</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div>
-                    <label for="model_type" class="block text-sm font-medium text-gray-700 mb-1">Model Type:</label>
-                    <select id="model_type" name="model_type" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        <option value="linear">Linear Regression</option>
-                        <option value="random_forest">Random Forest</option>
-                        <option value="gradient_boosting">Gradient Boosting</option>
+                    <label for="timeframe" class="block text-sm font-medium text-gray-700 mb-1">Prediction Timeframe:</label>
+                    <select id="timeframe" name="timeframe" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <option value="1d">1 Day</option>
+                        <option value="1w">1 Week</option>
+                        <option value="1m">1 Month</option>
                     </select>
                 </div>
                 
                 <div class="pt-2">
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300">
-                        Train Model
+                        Get Prediction
                     </button>
                 </div>
             </form>
+            
+            <div id="prediction-result" class="mt-6 hidden">
+                <h3 class="font-medium text-gray-700 mb-2">Prediction Result:</h3>
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <div class="text-center">
+                        <p class="text-lg font-semibold mb-2">Recommended Action:</p>
+                        <div class="inline-block px-4 py-2 rounded-full text-white font-medium" id="action-badge">
+                            <!-- Will be filled by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-600">Predicted Price Movement: <span id="price-movement">--</span></p>
+                        <p class="text-sm text-gray-600">Confidence Level: <span id="confidence">--</span></p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="text-center">
@@ -175,4 +121,161 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Function to create animated progress bar
+    function createProgressBar(value, color) {
+        const percentage = Math.min(100, Math.max(0, value * 100));
+        return `
+            <div class="flex items-center">
+                <span class="w-24 text-sm text-gray-600">${value.name}</span>
+                <div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+                    <div class="h-2 rounded-full transition-all duration-1000 ease-out ${color}" 
+                         style="width: 0%" 
+                         data-target="${percentage}">
+                    </div>
+                </div>
+                <span class="ml-2 text-sm text-gray-600">${value.importance.toFixed(2)}</span>
+            </div>
+        `;
+    }
+
+    // Function to animate progress bars
+    function animateProgressBars() {
+        document.querySelectorAll('[data-target]').forEach(bar => {
+            const target = bar.getAttribute('data-target');
+            bar.style.width = target + '%';
+        });
+    }
+
+    // Function to update model performance
+    function updateModelPerformance(asset, performance) {
+        const prefix = asset.toLowerCase();
+        document.getElementById(`${prefix}-mse`).textContent = performance.mse.toFixed(4);
+        document.getElementById(`${prefix}-rmse`).textContent = performance.rmse.toFixed(4);
+        document.getElementById(`${prefix}-r2`).textContent = performance.r2.toFixed(4);
+        
+        // Update feature importance
+        const container = document.getElementById(`${prefix}-features`);
+        container.innerHTML = '';
+        
+        // Sort features by importance
+        const sortedFeatures = Object.entries(performance.feature_importance)
+            .map(([name, importance]) => ({ name, importance }))
+            .sort((a, b) => b.importance - a.importance);
+        
+        // Create progress bars
+        sortedFeatures.forEach(feature => {
+            const color = prefix === 'gold' ? 'bg-yellow-600' : 'bg-blue-600';
+            container.innerHTML += createProgressBar(feature, color);
+        });
+        
+        // Animate the new progress bars
+        setTimeout(animateProgressBars, 100);
+    }
+
+    // Load initial model performance
+    async function loadModelPerformance() {
+        try {
+            const response = await fetch('/api/model/performance');
+            const data = await response.json();
+            
+            if (data.success) {
+                updateModelPerformance('gold', data.gold);
+                updateModelPerformance('bitcoin', data.bitcoin);
+            }
+        } catch (error) {
+            console.error('Error loading model performance:', error);
+        }
+    }
+
+    // Load model performance when page loads
+    document.addEventListener('DOMContentLoaded', loadModelPerformance);
+
+    // Handle form submission
+    document.querySelector('form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const asset = document.getElementById('asset').value;
+        const timeframe = document.getElementById('timeframe').value;
+        
+        if (!asset) {
+            alert('Please select an asset');
+            return;
+        }
+        
+        try {
+            // Show loading state
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Getting Prediction...';
+            submitButton.disabled = true;
+            
+            // Call API
+            const response = await fetch('/api/model/trading-recommendation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    asset: asset,
+                    timeframe: timeframe
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!data.success) {
+                throw new Error(data.error || 'Failed to get prediction');
+            }
+            
+            // Display results
+            const predictionResult = document.getElementById('prediction-result');
+            predictionResult.classList.remove('hidden');
+            
+            const actionBadge = document.getElementById('action-badge');
+            actionBadge.textContent = data.recommendation.action;
+            
+            // Set color based on action
+            switch(data.recommendation.action) {
+                case 'BUY':
+                    actionBadge.className = 'inline-block px-4 py-2 rounded-full text-white font-medium bg-green-500';
+                    break;
+                case 'SELL':
+                    actionBadge.className = 'inline-block px-4 py-2 rounded-full text-white font-medium bg-red-500';
+                    break;
+                default:
+                    actionBadge.className = 'inline-block px-4 py-2 rounded-full text-white font-medium bg-yellow-500';
+            }
+            
+            document.getElementById('price-movement').textContent = data.recommendation.price_movement;
+            document.getElementById('confidence').textContent = `${data.recommendation.confidence}%`;
+            
+            // Add additional details
+            const resultDiv = document.querySelector('#prediction-result .bg-white');
+            if (!resultDiv.querySelector('.mt-4 p:last-child')) {
+                const currentPrice = document.createElement('p');
+                currentPrice.className = 'text-sm text-gray-600';
+                currentPrice.innerHTML = `Current Price: $${data.recommendation.current_price}`;
+                
+                const predictedPrice = document.createElement('p');
+                predictedPrice.className = 'text-sm text-gray-600';
+                predictedPrice.innerHTML = `Predicted Price: $${data.recommendation.predicted_price}`;
+                
+                resultDiv.querySelector('.mt-4').appendChild(currentPrice);
+                resultDiv.querySelector('.mt-4').appendChild(predictedPrice);
+            }
+            
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            // Reset button state
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.textContent = 'Get Prediction';
+            submitButton.disabled = false;
+        }
+    });
+</script>
 {% endblock %} 
