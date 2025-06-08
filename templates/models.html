@@ -5,277 +5,593 @@
 {% block content %}
 <div class="bg-white shadow-md rounded-lg overflow-hidden">
     <div class="p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">Prediction Models</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-brain mr-3 text-purple-600"></i>
+            Enhanced Prediction Models
+        </h1>
         <p class="text-gray-600 mb-6">
-            Get predictions for Gold and Bitcoin prices and trading recommendations using our advanced machine learning models.
+            Get predictions for Gold and Bitcoin prices and trading recommendations using our advanced machine learning models with enhanced features and proper time series methodology.
         </p>
         
+        <!-- Model Performance Overview -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Gold Prediction Model</h2>
+            <!-- Gold Model Performance -->
+            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-lg shadow-lg card-hover">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-coins mr-2 text-yellow-600"></i>
+                    Gold Prediction Model
+                </h2>
+                
+                <!-- Performance Metrics -->
                 <div class="mb-4">
                     <h3 class="font-medium text-gray-700 mb-2">Model Performance:</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="bg-yellow-50 p-3 rounded">
-                            <p class="text-sm text-gray-500">MSE</p>
-                            <p class="text-lg font-bold text-yellow-600" id="gold-mse">--</p>
+                        <div class="bg-yellow-100 p-3 rounded-lg border border-yellow-200">
+                            <p class="text-sm text-gray-500">R² Score</p>
+                            <p class="text-lg font-bold text-yellow-700" id="gold-r2">Loading...</p>
                         </div>
-                        <div class="bg-yellow-50 p-3 rounded">
+                        <div class="bg-yellow-100 p-3 rounded-lg border border-yellow-200">
                             <p class="text-sm text-gray-500">RMSE</p>
-                            <p class="text-lg font-bold text-yellow-600" id="gold-rmse">--</p>
+                            <p class="text-lg font-bold text-yellow-700" id="gold-rmse">Loading...</p>
                         </div>
-                        <div class="bg-yellow-50 p-3 rounded">
-                            <p class="text-sm text-gray-500">R²</p>
-                            <p class="text-lg font-bold text-yellow-600" id="gold-r2">--</p>
+                        <div class="bg-yellow-100 p-3 rounded-lg border border-yellow-200">
+                            <p class="text-sm text-gray-500">MAE</p>
+                            <p class="text-lg font-bold text-yellow-700" id="gold-mae">Loading...</p>
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Model Details -->
                 <div class="mb-4">
-                    <h3 class="font-medium text-gray-700 mb-2">Feature Importance:</h3>
-                    <div class="space-y-2" id="gold-features">
-                        <!-- Will be populated by JavaScript -->
+                    <h3 class="font-medium text-gray-700 mb-2">Model Details:</h3>
+                    <div class="text-sm text-gray-600 space-y-1">
+                        <p><span class="font-medium">Type:</span> <span id="gold-model-type">XGBoost Enhanced</span></p>
+                        <p><span class="font-medium">Features:</span> <span id="gold-feature-count">200+</span> technical indicators</p>
+                        <p><span class="font-medium">Validation:</span> Time Series Cross-Validation</p>
+                        <p><span class="font-medium">Status:</span> <span id="gold-model-status" class="px-2 py-1 rounded text-xs bg-green-100 text-green-800">Active</span></p>
                     </div>
+                </div>
+                
+                <!-- Feature Importance Preview -->
+                <div class="mb-4">
+                    <h3 class="font-medium text-gray-700 mb-2">Top Features:</h3>
+                    <div class="space-y-2" id="gold-features">
+                        <div class="flex items-center">
+                            <div class="w-24 text-sm text-gray-600">Loading...</div>
+                            <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
+                                <div class="h-2 bg-yellow-500 rounded-full animate-pulse" style="width: 0%"></div>
+                            </div>
+                            <span class="text-sm text-gray-600">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <button onclick="trainModel('Gold')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm">
+                        <i class="fas fa-cog mr-1"></i>Retrain Model
+                    </button>
+                    <button onclick="viewModelDetails('gold')" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm">
+                        <i class="fas fa-info-circle mr-1"></i>Details
+                    </button>
                 </div>
             </div>
             
-            <div class="bg-gray-50 p-6 rounded-lg shadow">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Bitcoin Prediction Model</h2>
+            <!-- Bitcoin Model Performance -->
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-lg shadow-lg card-hover">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                    <i class="fab fa-bitcoin mr-2 text-orange-600"></i>
+                    Bitcoin Prediction Model
+                </h2>
+                
+                <!-- Performance Metrics -->
                 <div class="mb-4">
                     <h3 class="font-medium text-gray-700 mb-2">Model Performance:</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
-                        <div class="bg-blue-50 p-3 rounded">
-                            <p class="text-sm text-gray-500">MSE</p>
-                            <p class="text-lg font-bold text-blue-600" id="bitcoin-mse">{{ bitcoin_metrics['mse'] if bitcoin_metrics else 'Feature(s) missing' }}</p>
+                        <div class="bg-orange-100 p-3 rounded-lg border border-orange-200">
+                            <p class="text-sm text-gray-500">R² Score</p>
+                            <p class="text-lg font-bold text-orange-700" id="bitcoin-r2">Loading...</p>
                         </div>
-                        <div class="bg-blue-50 p-3 rounded">
+                        <div class="bg-orange-100 p-3 rounded-lg border border-orange-200">
                             <p class="text-sm text-gray-500">RMSE</p>
-                            <p class="text-lg font-bold text-blue-600" id="bitcoin-rmse">{{ bitcoin_metrics['rmse'] if bitcoin_metrics else 'Feature(s) missing' }}</p>
+                            <p class="text-lg font-bold text-orange-700" id="bitcoin-rmse">Loading...</p>
                         </div>
-                        <div class="bg-blue-50 p-3 rounded">
-                            <p class="text-sm text-gray-500">R²</p>
-                            <p class="text-lg font-bold text-blue-600" id="bitcoin-r2">{{ bitcoin_metrics['r2'] if bitcoin_metrics else 'Feature(s) missing' }}</p>
+                        <div class="bg-orange-100 p-3 rounded-lg border border-orange-200">
+                            <p class="text-sm text-gray-500">MAE</p>
+                            <p class="text-lg font-bold text-orange-700" id="bitcoin-mae">Loading...</p>
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Model Details -->
                 <div class="mb-4">
-                    <h3 class="font-medium text-gray-700 mb-2">Feature Importance:</h3>
-                    <div class="space-y-2" id="bitcoin-features">
-                        <!-- Will be populated by JavaScript -->
+                    <h3 class="font-medium text-gray-700 mb-2">Model Details:</h3>
+                    <div class="text-sm text-gray-600 space-y-1">
+                        <p><span class="font-medium">Type:</span> <span id="bitcoin-model-type">XGBoost Enhanced</span></p>
+                        <p><span class="font-medium">Features:</span> <span id="bitcoin-feature-count">200+</span> technical indicators</p>
+                        <p><span class="font-medium">Validation:</span> Time Series Cross-Validation</p>
+                        <p><span class="font-medium">Status:</span> <span id="bitcoin-model-status" class="px-2 py-1 rounded text-xs bg-green-100 text-green-800">Active</span></p>
                     </div>
+                </div>
+                
+                <!-- Feature Importance Preview -->
+                <div class="mb-4">
+                    <h3 class="font-medium text-gray-700 mb-2">Top Features:</h3>
+                    <div class="space-y-2" id="bitcoin-features">
+                        <div class="flex items-center">
+                            <div class="w-24 text-sm text-gray-600">Loading...</div>
+                            <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
+                                <div class="h-2 bg-orange-500 rounded-full animate-pulse" style="width: 0%"></div>
+                            </div>
+                            <span class="text-sm text-gray-600">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <button onclick="trainModel('BITCOIN')" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm">
+                        <i class="fas fa-cog mr-1"></i>Retrain Model
+                    </button>
+                    <button onclick="viewModelDetails('bitcoin')" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm">
+                        <i class="fas fa-info-circle mr-1"></i>Details
+                    </button>
                 </div>
             </div>
         </div>
         
+        <!-- Enhanced Trading Recommendations -->
         <div class="bg-gray-50 p-6 rounded-lg shadow mb-8">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Get Trading Recommendations</h2>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                <i class="fas fa-chart-line mr-2 text-blue-600"></i>
+                Get Enhanced Trading Recommendations
+            </h2>
             
-            <form class="space-y-4">
-                <div>
-                    <label for="asset" class="block text-sm font-medium text-gray-700 mb-1">Select Asset:</label>
-                    <select id="asset" name="asset" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        <option value="">Select an asset</option>
-                        <option value="gold">Gold</option>
-                        <option value="bitcoin">Bitcoin</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label for="timeframe" class="block text-sm font-medium text-gray-700 mb-1">Prediction Timeframe:</label>
-                    <select id="timeframe" name="timeframe" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-                        <option value="1d">1 Day</option>
-                        <option value="1w">1 Week</option>
-                        <option value="1m">1 Month</option>
-                    </select>
+            <form id="prediction-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="asset" class="block text-sm font-medium text-gray-700 mb-1">Select Asset:</label>
+                        <select id="asset" name="asset" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-2 border">
+                            <option value="">Select an asset</option>
+                            <option value="gold">Gold</option>
+                            <option value="bitcoin">Bitcoin</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="timeframe" class="block text-sm font-medium text-gray-700 mb-1">Prediction Timeframe:</label>
+                        <select id="timeframe" name="timeframe" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-2 border">
+                            <option value="1d">1 Day</option>
+                            <option value="1w">1 Week</option>
+                            <option value="1m">1 Month</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="confidence-threshold" class="block text-sm font-medium text-gray-700 mb-1">Confidence Threshold:</label>
+                        <select id="confidence-threshold" name="confidence-threshold" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-2 border">
+                            <option value="0.5">50% - Low</option>
+                            <option value="0.6" selected>60% - Medium</option>
+                            <option value="0.7">70% - High</option>
+                            <option value="0.8">80% - Very High</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="pt-2">
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300">
-                        Get Prediction
+                    <button type="submit" id="predict-btn" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200">
+                        <i class="fas fa-brain mr-2"></i>Get Enhanced Prediction
                     </button>
                 </div>
             </form>
             
+            <!-- Enhanced Prediction Results -->
             <div id="prediction-result" class="mt-6 hidden">
-                <h3 class="font-medium text-gray-700 mb-2">Prediction Result:</h3>
-                <div class="bg-white p-4 rounded-lg shadow">
-                    <div class="text-center">
-                        <p class="text-lg font-semibold mb-2">Recommended Action:</p>
-                        <div class="inline-block px-4 py-2 rounded-full text-white font-medium" id="action-badge">
+                <h3 class="font-medium text-gray-700 mb-4">Enhanced Prediction Result:</h3>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <!-- Main Recommendation -->
+                    <div class="text-center mb-6">
+                        <div class="inline-block px-6 py-3 rounded-full text-white font-bold text-xl" id="action-badge">
                             <!-- Will be filled by JavaScript -->
                         </div>
+                        <p class="text-sm text-gray-600 mt-2" id="recommendation-reason">Analysis reason will appear here</p>
                     </div>
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-600">Predicted Price Movement: <span id="price-movement">--</span></p>
-                        <p class="text-sm text-gray-600">Confidence Level: <span id="confidence">--</span></p>
+                    
+                    <!-- Detailed Metrics -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-500">Current Price</p>
+                            <p class="text-lg font-bold text-gray-800" id="current-price">--</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-500">Predicted Price</p>
+                            <p class="text-lg font-bold text-gray-800" id="predicted-price">--</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-500">Price Movement</p>
+                            <p class="text-lg font-bold" id="price-movement">--</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm text-gray-500">Confidence</p>
+                            <p class="text-lg font-bold text-blue-600" id="confidence">--</p>
+                        </div>
+                    </div>
+
+                    <!-- Risk Assessment -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-700 mb-2">Risk Assessment</h4>
+                            <div class="flex items-center">
+                                <span class="text-sm text-gray-600 mr-2">Risk Level:</span>
+                                <span id="risk-level" class="px-2 py-1 rounded text-xs font-medium">--</span>
+                            </div>
+                            <div class="flex items-center mt-1">
+                                <span class="text-sm text-gray-600 mr-2">Risk Range:</span>
+                                <span id="risk-range" class="text-sm font-medium">--</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-700 mb-2">Model Performance</h4>
+                            <div class="text-sm text-gray-600 space-y-1">
+                                <div>R² Score: <span id="model-r2" class="font-medium">--</span></div>
+                                <div>CV Mean: <span id="model-cv-mean" class="font-medium">--</span></div>
+                                <div>CV Std: <span id="model-cv-std" class="font-medium">--</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2 justify-center">
+                        <button onclick="getPredictionChart()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm">
+                            <i class="fas fa-chart-line mr-1"></i>View Chart
+                        </button>
+                        <button onclick="getBacktest()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm">
+                            <i class="fas fa-history mr-1"></i>Backtest
+                        </button>
+                        <button onclick="exportResults()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm">
+                            <i class="fas fa-download mr-1"></i>Export
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Model Comparison Chart -->
+        <div class="bg-gray-50 p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                <i class="fas fa-balance-scale mr-2 text-green-600"></i>
+                Model Performance Comparison
+            </h2>
+            <div class="chart-container">
+                <canvas id="modelComparisonChart"></canvas>
+            </div>
+        </div>
         
+        <!-- Back to Home -->
         <div class="text-center">
-            <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded transition duration-300">
-                Back to Home
+            <a href="{{ url_for('index') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200">
+                <i class="fas fa-home mr-2"></i>Back to Dashboard
             </a>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block scripts %}
+{% block extra_js %}
 <script>
-    // Function to create animated progress bar
-    function createProgressBar(value, color) {
-        const percentage = Math.min(100, Math.max(0, value * 100));
-        return `
-            <div class="flex items-center">
-                <span class="w-24 text-sm text-gray-600">${value.name}</span>
-                <div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div class="h-2 rounded-full transition-all duration-1000 ease-out ${color}" 
-                         style="width: 0%" 
-                         data-target="${percentage}">
-                    </div>
-                </div>
-                <span class="ml-2 text-sm text-gray-600">${value.importance.toFixed(2)}</span>
-            </div>
-        `;
-    }
+    let modelComparisonChart;
 
-    // Function to animate progress bars
-    function animateProgressBars() {
-        document.querySelectorAll('[data-target]').forEach(bar => {
-            const target = bar.getAttribute('data-target');
-            bar.style.width = target + '%';
-        });
-    }
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        loadModelPerformance();
+        initializeModelComparisonChart();
+        
+        // Form submission
+        document.getElementById('prediction-form').addEventListener('submit', handlePredictionSubmit);
+    });
 
-    // Function to update model performance
-    function updateModelPerformance(asset, performance) {
-        const prefix = asset.toLowerCase();
-        document.getElementById(`${prefix}-mse`).textContent = performance.mse.toFixed(4);
-        document.getElementById(`${prefix}-rmse`).textContent = performance.rmse.toFixed(4);
-        document.getElementById(`${prefix}-r2`).textContent = performance.r2.toFixed(4);
-        
-        // Update feature importance
-        const container = document.getElementById(`${prefix}-features`);
-        container.innerHTML = '';
-        
-        // Sort features by importance
-        const sortedFeatures = Object.entries(performance.feature_importance)
-            .map(([name, importance]) => ({ name, importance }))
-            .sort((a, b) => b.importance - a.importance);
-        
-        // Create progress bars
-        sortedFeatures.forEach(feature => {
-            const color = prefix === 'gold' ? 'bg-yellow-600' : 'bg-blue-600';
-            container.innerHTML += createProgressBar(feature, color);
-        });
-        
-        // Animate the new progress bars
-        setTimeout(animateProgressBars, 100);
-    }
-
-    // Load initial model performance
+    // Load model performance data
     async function loadModelPerformance() {
         try {
-            const response = await fetch('/api/model/performance');
-            const data = await response.json();
+            const response = await apiCall('/api/model/performance');
             
-            if (data.success) {
-                updateModelPerformance('gold', data.gold);
-                updateModelPerformance('bitcoin', data.bitcoin);
+            if (response.success) {
+                updateModelDisplay('gold', response.models.gold);
+                updateModelDisplay('bitcoin', response.models.bitcoin);
+                updateModelComparisonChart(response.models);
             }
         } catch (error) {
             console.error('Error loading model performance:', error);
+            showToast('Failed to load model performance', 'error');
         }
     }
 
-    // Load model performance when page loads
-    document.addEventListener('DOMContentLoaded', loadModelPerformance);
+    // Update model display
+    function updateModelDisplay(asset, modelData) {
+        const performance = modelData.performance;
+        
+        if (performance && typeof performance === 'object') {
+            // Handle both enhanced and legacy format
+            const metrics = performance.xgboost || performance;
+            
+            document.getElementById(`${asset}-r2`).textContent = 
+                metrics.r2 ? metrics.r2.toFixed(3) : 'N/A';
+            document.getElementById(`${asset}-rmse`).textContent = 
+                metrics.rmse ? metrics.rmse.toFixed(2) : 'N/A';
+            document.getElementById(`${asset}-mae`).textContent = 
+                metrics.mae ? metrics.mae.toFixed(2) : 'N/A';
+            
+            // Update model type
+            document.getElementById(`${asset}-model-type`).textContent = 
+                modelData.model_type === 'enhanced' ? 'XGBoost Enhanced' : 'XGBoost Legacy';
+            
+            // Update feature importance
+            updateFeatureImportance(asset, modelData.feature_importance || {});
+            
+            // Update status
+            const statusElement = document.getElementById(`${asset}-model-status`);
+            const r2Score = metrics.r2 || 0;
+            if (r2Score > 0.7) {
+                statusElement.className = 'px-2 py-1 rounded text-xs bg-green-100 text-green-800';
+                statusElement.textContent = 'Excellent';
+            } else if (r2Score > 0.5) {
+                statusElement.className = 'px-2 py-1 rounded text-xs bg-yellow-100 text-yellow-800';
+                statusElement.textContent = 'Good';
+            } else {
+                statusElement.className = 'px-2 py-1 rounded text-xs bg-red-100 text-red-800';
+                statusElement.textContent = 'Needs Training';
+            }
+        } else {
+            // Handle case where no performance data is available
+            ['r2', 'rmse', 'mae'].forEach(metric => {
+                document.getElementById(`${asset}-${metric}`).textContent = 'N/A';
+            });
+            
+            document.getElementById(`${asset}-model-status`).textContent = 'Not Available';
+            document.getElementById(`${asset}-model-status`).className = 'px-2 py-1 rounded text-xs bg-gray-100 text-gray-800';
+        }
+    }
 
-    // Handle form submission
-    document.querySelector('form').addEventListener('submit', async function(e) {
+    // Update feature importance display
+    function updateFeatureImportance(asset, featureImportance) {
+        const container = document.getElementById(`${asset}-features`);
+        container.innerHTML = '';
+        
+        const features = Object.entries(featureImportance)
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 5); // Top 5 features
+        
+        if (features.length === 0) {
+            container.innerHTML = '<div class="text-sm text-gray-500">No feature importance data available</div>';
+            return;
+        }
+        
+        const maxImportance = Math.max(...features.map(([,importance]) => importance));
+        const color = asset === 'gold' ? 'bg-yellow-500' : 'bg-orange-500';
+        
+        features.forEach(([feature, importance]) => {
+            const percentage = (importance / maxImportance) * 100;
+            const featureHtml = `
+                <div class="flex items-center">
+                    <div class="w-24 text-sm text-gray-600 truncate" title="${feature}">${feature.slice(0, 12)}...</div>
+                    <div class="flex-1 bg-gray-200 rounded-full h-2 mx-2">
+                        <div class="h-2 ${color} rounded-full transition-all duration-1000" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="text-sm text-gray-600">${importance.toFixed(3)}</span>
+                </div>
+            `;
+            container.innerHTML += featureHtml;
+        });
+    }
+
+    // Initialize model comparison chart
+    function initializeModelComparisonChart() {
+        const ctx = document.getElementById('modelComparisonChart').getContext('2d');
+        modelComparisonChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['R² Score', 'RMSE (scaled)', 'MAE (scaled)'],
+                datasets: [
+                    {
+                        label: 'Gold Model',
+                        data: [0, 0, 0],
+                        backgroundColor: 'rgba(241, 196, 15, 0.8)',
+                        borderColor: 'rgba(241, 196, 15, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Bitcoin Model',
+                        data: [0, 0, 0],
+                        backgroundColor: 'rgba(247, 147, 26, 0.8)',
+                        borderColor: 'rgba(247, 147, 26, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Model Performance Metrics Comparison'
+                    }
+                }
+            }
+        });
+    }
+
+    // Update model comparison chart
+    function updateModelComparisonChart(models) {
+        if (!modelComparisonChart) return;
+        
+        const goldMetrics = models.gold?.performance?.xgboost || models.gold?.performance || {};
+        const bitcoinMetrics = models.bitcoin?.performance?.xgboost || models.bitcoin?.performance || {};
+        
+        // Normalize RMSE and MAE to 0-1 scale for comparison
+        const goldRMSENorm = goldMetrics.rmse ? Math.max(0, 1 - (goldMetrics.rmse / 1000)) : 0;
+        const bitcoinRMSENorm = bitcoinMetrics.rmse ? Math.max(0, 1 - (bitcoinMetrics.rmse / 10000)) : 0;
+        const goldMAENorm = goldMetrics.mae ? Math.max(0, 1 - (goldMetrics.mae / 500)) : 0;
+        const bitcoinMAENorm = bitcoinMetrics.mae ? Math.max(0, 1 - (bitcoinMetrics.mae / 5000)) : 0;
+        
+        modelComparisonChart.data.datasets[0].data = [
+            goldMetrics.r2 || 0,
+            goldRMSENorm,
+            goldMAENorm
+        ];
+        
+        modelComparisonChart.data.datasets[1].data = [
+            bitcoinMetrics.r2 || 0,
+            bitcoinRMSENorm,
+            bitcoinMAENorm
+        ];
+        
+        modelComparisonChart.update();
+    }
+
+    // Handle prediction form submission
+    async function handlePredictionSubmit(e) {
         e.preventDefault();
         
         const asset = document.getElementById('asset').value;
         const timeframe = document.getElementById('timeframe').value;
+        const confidenceThreshold = parseFloat(document.getElementById('confidence-threshold').value);
         
         if (!asset) {
-            alert('Please select an asset');
+            showToast('Please select an asset', 'warning');
             return;
         }
         
+        const submitBtn = document.getElementById('predict-btn');
+        const originalText = submitBtn.innerHTML;
+        
         try {
             // Show loading state
-            const submitButton = this.querySelector('button[type="submit"]');
-            const originalText = submitButton.textContent;
-            submitButton.textContent = 'Getting Prediction...';
-            submitButton.disabled = true;
+            submitBtn.innerHTML = '<span class="loading-spinner mr-2"></span>Getting Enhanced Prediction...';
+            submitBtn.disabled = true;
             
-            // Call API
-            const response = await fetch('/api/model/trading-recommendation', {
+            // Call enhanced API
+            const response = await apiCall('/api/model/trading-recommendation', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({
                     asset: asset,
-                    timeframe: timeframe
+                    timeframe: timeframe,
+                    confidence_threshold: confidenceThreshold
                 })
             });
             
-            const data = await response.json();
-            
-            if (!data.success) {
-                throw new Error(data.error || 'Failed to get prediction');
-            }
-            
-            // Display results
-            const predictionResult = document.getElementById('prediction-result');
-            predictionResult.classList.remove('hidden');
-            
-            const actionBadge = document.getElementById('action-badge');
-            actionBadge.textContent = data.recommendation.action;
-            
-            // Set color based on action
-            switch(data.recommendation.action) {
-                case 'BUY':
-                    actionBadge.className = 'inline-block px-4 py-2 rounded-full text-white font-medium bg-green-500';
-                    break;
-                case 'SELL':
-                    actionBadge.className = 'inline-block px-4 py-2 rounded-full text-white font-medium bg-red-500';
-                    break;
-                default:
-                    actionBadge.className = 'inline-block px-4 py-2 rounded-full text-white font-medium bg-yellow-500';
-            }
-            
-            document.getElementById('price-movement').textContent = data.recommendation.price_movement;
-            document.getElementById('confidence').textContent = `${data.recommendation.confidence}%`;
-            
-            // Add additional details
-            const resultDiv = document.querySelector('#prediction-result .bg-white');
-            if (!resultDiv.querySelector('.mt-4 p:last-child')) {
-                const currentPrice = document.createElement('p');
-                currentPrice.className = 'text-sm text-gray-600';
-                currentPrice.innerHTML = `Current Price: $${data.recommendation.current_price}`;
-                
-                const predictedPrice = document.createElement('p');
-                predictedPrice.className = 'text-sm text-gray-600';
-                predictedPrice.innerHTML = `Predicted Price: $${data.recommendation.predicted_price}`;
-                
-                resultDiv.querySelector('.mt-4').appendChild(currentPrice);
-                resultDiv.querySelector('.mt-4').appendChild(predictedPrice);
+            if (response.success) {
+                displayEnhancedPredictionResults(response.recommendation, asset, timeframe);
             }
             
         } catch (error) {
-            alert('Error: ' + error.message);
+            console.error('Prediction error:', error);
+            showToast(`Error: ${error.message}`, 'error');
         } finally {
             // Reset button state
-            const submitButton = this.querySelector('button[type="submit"]');
-            submitButton.textContent = 'Get Prediction';
-            submitButton.disabled = false;
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         }
-    });
-</script>
-{% endblock %} 
+    }
+
+    // Display enhanced prediction results
+    function displayEnhancedPredictionResults(recommendation, asset, timeframe) {
+        const resultDiv = document.getElementById('prediction-result');
+        resultDiv.classList.remove('hidden');
+        
+        // Set action badge
+        const actionBadge = document.getElementById('action-badge');
+        actionBadge.textContent = recommendation.action;
+        
+        // Set color based on action
+        const actionColors = {
+            'BUY': 'bg-green-500',
+            'SELL': 'bg-red-500',
+            'HOLD': 'bg-yellow-500'
+        };
+        actionBadge.className = `inline-block px-6 py-3 rounded-full text-white font-bold text-xl ${actionColors[recommendation.action] || 'bg-gray-500'}`;
+        
+        // Update all fields
+        document.getElementById('recommendation-reason').textContent = recommendation.reason || 'Analysis based on enhanced ML model';
+        document.getElementById('current-price').textContent = `$${recommendation.current_price}`;
+        document.getElementById('predicted-price').textContent = `$${recommendation.predicted_price}`;
+        document.getElementById('price-movement').textContent = recommendation.price_movement;
+        document.getElementById('confidence').textContent = `${recommendation.confidence}%`;
+        
+        // Risk assessment
+        const riskColors = {
+            'LOW': 'bg-green-100 text-green-800',
+            'MEDIUM': 'bg-yellow-100 text-yellow-800',
+            'HIGH': 'bg-red-100 text-red-800'
+        };
+        document.getElementById('risk-level').textContent = recommendation.risk_level || 'MEDIUM';
+        document.getElementById('risk-level').className = `px-2 py-1 rounded text-xs font-medium ${riskColors[recommendation.risk_level] || 'bg-gray-100 text-gray-800'}`;
+        document.getElementById('risk-range').textContent = recommendation.risk_range || 'N/A';
+        
+        // Model performance
+        if (recommendation.model_performance) {
+            document.getElementById('model-r2').textContent = recommendation.model_performance.r2_score || 'N/A';
+            document.getElementById('model-cv-mean').textContent = recommendation.model_performance.cv_mean || 'N/A';
+            document.getElementById('model-cv-std').textContent = recommendation.model_performance.cv_std || 'N/A';
+        }
+        
+        // Add price movement styling
+        const priceMovementElement = document.getElementById('price-movement');
+        const movement = parseFloat(recommendation.price_movement);
+        addPriceChangeClass(priceMovementElement, movement);
+        
+        showToast(`${recommendation.action} recommendation generated for ${asset}`, 'success');
+    }
+
+    // Train model function
+    async function trainModel(targetCol) {
+        try {
+            showToast(`Training ${targetCol} model with enhanced features...`, 'info');
+            
+            const response = await apiCall('/api/model/train', {
+                method: 'POST',
+                body: JSON.stringify({
+                    target_col: targetCol,
+                    optimize_params: true,
+                    test_size: 0.2
+                })
+            });
+            
+            if (response.success) {
+                showToast(`${targetCol} model trained successfully!`, 'success');
+                loadModelPerformance(); // Refresh display
+            }
+        } catch (error) {
+            console.error(`Training error for ${targetCol}:`, error);
+            showToast(`Failed to train ${targetCol} model: ${error.message}`, 'error');
+        }
+    }
+
+    // View model details
+    function viewModelDetails(asset) {
+        showToast(`Detailed model information for ${asset} would open here`, 'info');
+        // In a real implementation, this would open a modal or navigate to a detailed view
+    }
+
+    // Get prediction chart
+    function getPredictionChart() {
+        showToast('Prediction chart feature coming soon', 'info');
+        // Implementation would show a detailed chart with predictions
+    }
+
+    // Get backtest results
+    function getBacktest() {
+        showToast('Backtesting feature coming soon', 'info');
+        // Implementation would run and display backtest results
+    }
+
+    // Export results
