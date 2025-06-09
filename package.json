@@ -1,0 +1,21 @@
+{
+  "name": "unemployment-and-salary-college-graduate-usa",
+  "version": "1.0.0",
+  "description": "Analysis of unemployment and salary data for college graduates in the USA",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css",
+    "watch:css": "tailwindcss -i ./static/src/input.css -o ./static/dist/output.css --watch",
+    "watch:flask": "nodemon --exec python app.py",
+    "dev": "concurrently \"npm run watch:css\" \"npm run watch:flask\""
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.1.10",
+    "tailwindcss": "^3.3.3"
+  },
+  "dependencies": {
+    "flowbite": "^1.8.1"
+  }
+}

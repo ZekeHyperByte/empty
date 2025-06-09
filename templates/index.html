@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Gold and Bitcoin Predictor{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+    <div class="p-8">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-chart-line mr-3 text-blue-600"></i>
+                    Enhanced Financial ML Dashboard
+                </h1>
+                <p class="text-xl text-gray-600">Real-time market analysis and ML-powered predictions for Gold and Bitcoin</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="refreshAllData()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-sync-alt mr-2"></i>Refresh Data
+                </button>
+                <a href="{{ url_for('analytics') }}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                    <i class="fas fa-chart-bar mr-2"></i>View Analytics
+                </a>
+            </div>
+        </div>
+        
+        <!-- Market Overview Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Gold Card -->
+            <div class="gradient-gold p-6 rounded-lg shadow-lg text-white card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-3xl font-bold mb-1" id="gold-price">Loading...</div>
+                        <div class="text-sm opacity-90">
+                            <i class="fas fa-coins mr-1"></i>Gold Price (USD/oz)
+                        </div>
+                        <div class="text-sm mt-2" id="gold-change">--</div>
+                    </div>
+                    <i class="fas fa-coins text-4xl opacity-75"></i>
+                </div>
+            </div>
+
+            <!-- Bitcoin Card -->
+            <div class="gradient-bitcoin p-6 rounded-lg shadow-lg text-white card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-3xl font-bold mb-1" id="bitcoin-price">Loading...</div>
+                        <div class="text-sm opacity-90">
+                            <i class="fab fa-bitcoin mr-1"></i>Bitcoin Price (USD)
+                        </div>
+                        <div class="text-sm mt-2" id="bitcoin-change">--</div>
+                    </div>
+                    <i class="fab fa-bitcoin text-4xl opacity-75"></i>
+                </div>
+            </div>
+
+            <!-- S&P 500 Card -->
+            <div class="gradient-primary p-6 rounded-lg shadow-lg text-white card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-3xl font-bold mb-1" id="sp500-value">Loading...</div>
+                        <div class="text-sm opacity-90">
+                            <i class="fas fa-chart-area mr-1"></i>S&P 500
+                        </div>
+                        <div class="text-sm mt-2" id="sp500-change">--</div>
+                    </div>
+                    <i class="fas fa-chart-area text-4xl opacity-75"></i>
+                </div>
+            </div>
+
+            <!-- Oil Card -->
+            <div class="bg-gradient-to-br from-gray-700 to-gray-900 p-6 rounded-lg shadow-lg text-white card-hover">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-3xl font-bold mb-1" id="oil-price">Loading...</div>
+                        <div class="text-sm opacity-90">
+                            <i class="fas fa-oil-can mr-1"></i>Brent Oil (USD/bbl)
+                        </div>
+                        <div class="text
