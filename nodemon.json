@@ -1,5 +1,0 @@
-{
-  "watch": ["app.py", "app/**/*.py", "templates/**/*.html"],
-  "ext": "py,html",
-  "ignore": [".git", "node_modules/**/node_modules", "__pycache__", "*.pyc"]
-} 
